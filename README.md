@@ -7,8 +7,8 @@ See [this blog post](http://atpaino.com/2017/01/03/deep-text-correcter.html) for
 
 ## Motivation
 While context-sensitive spell-check systems are able to automatically correct a large number of input errors in instant messaging, email, and SMS messages, they are unable to correct even simple grammatical errors. 
-For example, the message "I'm going to store" would be unaffected by typical autocorrection systems, when the user most likely intendend to write "I'm going to _the_ store". 
-These kinds of simple grammatical mistakes are common in so-called "learner English", and constructing systems capable of detecting and correcting these mistakes has been the subect of multiple [CoNLL shared tasks](http://www.aclweb.org/anthology/W14-1701.pdf).
+For example, the message "I'm going to store" would be unaffected by typical autocorrection systems, when the user most likely intended to write "I'm going to _the_ store". 
+These kinds of simple grammatical mistakes are common in so-called "learner English", and constructing systems capable of detecting and correcting these mistakes has been the subject of multiple [CoNLL shared tasks](http://www.aclweb.org/anthology/W14-1701.pdf).
 
 The goal of this project is to train sequence-to-sequence models that are capable of automatically correcting such errors. 
 Specifically, the models are trained to provide a function mapping a potentially errant input sequence to a sequence with all (small) grammatical errors corrected.
@@ -55,7 +55,7 @@ This prior is carried out through a modification to the seq2seq model's decoding
 
 To restrict the decoding such that it only ever chooses tokens from the input sequence or corrective token set, this project applies a binary mask to the model's logits prior to extracting the prediction to be fed into the next time step. 
 This mask is constructed such that `mask[i] == 1.0 if (i in input or corrective_tokens) else 0.0`. 
-Since this mask is applited to the result of a softmax transormation (which guarantees all outputs are non-negative), we can be sure that only input or corrective tokens are ever selected.
+Since this mask is applied to the result of a softmax transformation (which guarantees all outputs are non-negative), we can be sure that only input or corrective tokens are ever selected.
 
 Note that this logic is not used during training, as this would only serve to eliminate potentially useful signal from the model.
 
@@ -63,7 +63,7 @@ Note that this logic is not used during training, as this would only serve to el
 
 Since the decoding bias described above is applied within the truncated vocabulary used by the model, we will still see the unknown token in its output for any OOV tokens. 
 The more generic problem of resolving these OOV tokens is non-trivial (e.g. see [Addressing the Rare Word Problem in NMT](https://arxiv.org/pdf/1410.8206v4.pdf)), but in this project we can again take advantage of its unique structure to create a fairly straightforward OOV token resolution scheme. 
-That is, if we assume the sequence of OOV tokens in the input is equal to the sequence of OOV tokens in the output sequence, then we can trivially assign the appropriate token to each "unknown" token encountered int he decoding. 
+That is, if we assume the sequence of OOV tokens in the input is equal to the sequence of OOV tokens in the output sequence, then we can trivially assign the appropriate token to each "unknown" token encountered in the decoding. 
 Empirically, and intuitively, this appears to be an appropriate assumption, as the relatively simple class of errors these models are being trained to address should never include mistakes that warrant the insertion or removal of a rare token.
 
 ## Experiments and Results
