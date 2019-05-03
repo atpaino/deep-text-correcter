@@ -1,0 +1,5 @@
+pandas==0.19.2
+scipy==0.18.1
+nltk==3.2.2
+matplotlib==1.5.3
+tensorflow==1.8.0
